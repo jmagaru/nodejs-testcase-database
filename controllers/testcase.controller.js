@@ -1,6 +1,7 @@
 "use strict";
 
 const Testcase = require("../models/testcase.model");
+const { statistics } = require("../db");
 
 // Create and Save new testcase
 exports.create = (req,res) =>{
@@ -10,17 +11,21 @@ exports.create = (req,res) =>{
             message : "Content should not be empty!"
         })
     }
+    
+    const steps = req.body.steps
+    let queryParam = []
+    for (let i = 0; i < steps.length; i++){
+        const step = steps[i];
+        const step_num = step.step_num;
+        const step_desc = step.step;
+        const step_expect = step.expect;
+        let param = [ req.body.tc_id, step_num, step_desc, step_expect ]
+        queryParam.push(param);
+    }
 
-    // Create Testcase object
-    const testcase = new Testcase ({
-        step_num: req.body.step_num,
-        tc_id: req.body.tc_id,
-        step_desc: "Step : "+req.body.step,
-        step_expect: req.body.expect
-    });
 
     // Save testcase in the DB
-    Testcase.create(testcase,(err,data)=>{
+    Testcase.create([queryParam],(err,data)=>{
         if(err){
             res.status(500).send({
                 message : err.message || "Some error occurred while creating the Testcase."

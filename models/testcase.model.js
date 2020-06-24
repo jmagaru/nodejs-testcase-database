@@ -10,7 +10,9 @@ const Testcase = function(testcase){
 }
 
 Testcase.create = (newTestcase, result) => {
-    sql.query("INSERT INTO tc_steps SET ?",newTestcase,(err,res) => {
+    let sqlscript = "insert into tc_steps (tc_id, step_no, step_desc, step_expect) VALUES ?";
+
+    sql.query(sqlscript, newTestcase, (err,res) => {
         if(err) {
             console.log("error: ",err);
             result(err,null);
