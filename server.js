@@ -16,7 +16,7 @@ app.get("/",(req,res) => {
     res.json({message:"Welcome to the Jungle"});
 });
 
-require("./routes/customer.routes")(app);
+require("./routes/testcase.routes")(app);
 
 //set port , listen for request
 app.listen(3000, () => {
